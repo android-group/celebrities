@@ -6,13 +6,29 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import ru.android_studio.dancetothemusic.dummy.DummyContent;
-import ru.android_studio.dancetothemusic.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+import ru.android_studio.dancetothemusic.model.db.ArtistDB;
+import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
+import ru.android_studio.dancetothemusic.retrofit_api.ArtistsAPI;
 
 /**
  * A fragment representing a list of Items.
@@ -20,15 +36,15 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ItemFragment extends Fragment {
+public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
 
     // TODO: Customize parameters
     private int mColumnCount = 1;
-
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-
     private OnListFragmentInteractionListener mListener;
+    Realm realm;
+    private static final String TAG = "ItemFragment";
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
@@ -51,9 +67,18 @@ public class ItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+        realm = null;
     }
 
     @Override
@@ -61,20 +86,40 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
-        // Set the adapter
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://cache-default06e.cdn.yandex.net")
+                .addConverterFactory(JacksonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+
+
+        // prepare call in Retrofit 2.0
+        ArtistsAPI artistsAPI = retrofit.create(ArtistsAPI.class);
+        Call<ArtistDTO[]> call = artistsAPI.loadArtists();
+        call.enqueue(this);
+        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext()).build();
+        // Get a Realm instance for this thread
+        realm = Realm.getInstance(realmConfig);
+
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+
+            artistDTOList = new ArrayList<>();
+            adapter = new AuthorItemRecyclerViewAdapter(getActivity(), artistDTOList, mListener);
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }
-
+    List<ArtistDTO> artistDTOList;
+    RecyclerView recyclerView;
+    AuthorItemRecyclerViewAdapter adapter;
 
     @Override
     public void onAttach(Context context) {
@@ -93,18 +138,59 @@ public class ItemFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    /*
+    * Листнер обрабатывает клик по строчке
+    * */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(ArtistDTO item);
+    }
+
+    /*
+    * При успешном соединении с сервером
+    * Получение данных и сохранение в БД
+    * */
+    @Override
+    public void onResponse(Call<ArtistDTO[]> call, Response<ArtistDTO[]> response) {
+        getActivity().setProgressBarIndeterminateVisibility(false);
+
+        RealmQuery<ArtistDB> artistDB = realm.where(ArtistDB.class);
+        Log.d(TAG, "Count of artists before persist: " + artistDB.count());
+
+        ArtistDTO[] artists = response.body();
+
+        /*
+        @TODO Перенести в асинхронный процесс
+        for (ArtistDTO artist : artists) {
+            // Persist your data easily
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(ArtistDB.of(artist));
+            realm.commitTransaction();
+        }*/
+
+        /*
+        * @TODO На форму добавить только первые 25, а дальше сделать паджинациию
+        * */
+        artistDTOList.addAll(Arrays.asList(artists));
+
+        /*
+        * Обновление данных на UI
+        * */
+        adapter.notifyDataSetChanged();
+
+        Log.d(TAG, "Count of artists before persist: " + artistDB.count());
+    }
+
+    /*
+    * Обработка ошибки при получении данных с сервера
+    *
+    * При ошибке загружаем данные из БД
+    * */
+    @Override
+    public void onFailure(Call<ArtistDTO[]> call, Throwable t) {
+        RealmResults<ArtistDB> artistDBRealmResults = realm.where(ArtistDB.class).findAll();
+        for(ArtistDB artistDB: artistDBRealmResults) {
+            artistDTOList.add(ArtistDTO.of(artistDB));
+        }
+        adapter.notifyDataSetChanged();
     }
 }

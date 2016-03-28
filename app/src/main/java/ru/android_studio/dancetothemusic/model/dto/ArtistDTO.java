@@ -1,10 +1,15 @@
 package ru.android_studio.dancetothemusic.model.dto;
 
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.annotations.PrimaryKey;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.android_studio.dancetothemusic.model.db.ArtistDB;
+import ru.android_studio.dancetothemusic.model.db.Genre;
 
 @ToString
 @EqualsAndHashCode
@@ -43,6 +48,38 @@ public class ArtistDTO {
     @Setter
     private CoverDTO cover;
 
+    public ArtistDTO(Integer id, String name, String[] genres, Integer tracks, Integer albums, String link, String description, CoverDTO cover) {
+        this.id = id;
+        this.name = name;
+        this.genres = genres;
+        this.tracks = tracks;
+        this.albums = albums;
+        this.link = link;
+        this.description = description;
+        this.cover = cover;
+    }
+
     public ArtistDTO() {
+    }
+
+    public static ArtistDTO of(ArtistDB artistDB) {
+        RealmList<Genre> genresDB = artistDB.getGenres();
+        String[] genres = new String[genresDB.size()];
+        for(int i = 0; i < genresDB.size(); i++) {
+            Genre genre = genresDB.get(i);
+            if(genre != null) {
+                genres[i] = genre.getName();
+            }
+        }
+
+        return new ArtistDTO(
+        artistDB.getId(),
+        artistDB.getName(),
+        genres,
+        artistDB.getTracks(),
+        artistDB.getAlbums(),
+        artistDB.getLink(),
+        artistDB.getDescription(),
+        artistDB.getCover());
     }
 }
