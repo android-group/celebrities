@@ -2,6 +2,7 @@ package ru.android_studio.dancetothemusic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,9 @@ public class ArtistListActivity extends AppCompatActivity implements ItemFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         setContentView(R.layout.activity_artist_list);
 
         // initialization http://jakewharton.github.io/butterknife/
@@ -44,8 +48,9 @@ public class ArtistListActivity extends AppCompatActivity implements ItemFragmen
     * Переход по клику в информацию об артисте
     * */
     @Override
-    public void onListFragmentInteraction(ArtistDTO item) {
+    public void onListFragmentInteraction(ArtistDTO artistDTO) {
         Intent intent = new Intent(this, ArtistInfoActivity.class);
+        intent.putExtra("ARTIST_DTO", artistDTO);
         startActivity(intent);
     }
 

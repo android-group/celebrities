@@ -43,7 +43,11 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     private OnListFragmentInteractionListener mListener;
-    Realm realm;
+    private Realm realm;
+    private List<ArtistDTO> artistDTOList;
+    private RecyclerView recyclerView;
+    private AuthorItemRecyclerViewAdapter adapter;
+
     private static final String TAG = "ItemFragment";
 
     // TODO: Customize parameter initialization
@@ -66,7 +70,6 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -117,9 +120,6 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         }
         return view;
     }
-    List<ArtistDTO> artistDTOList;
-    RecyclerView recyclerView;
-    AuthorItemRecyclerViewAdapter adapter;
 
     @Override
     public void onAttach(Context context) {

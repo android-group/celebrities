@@ -1,7 +1,5 @@
 package ru.android_studio.dancetothemusic;
 
-
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +22,7 @@ public class ImageLoader {
     }
 
     public void loadCover(String urlCover, ImageView cover) {
-        new DownloadCoverTask(cover).doInBackground(urlCover);
+        new DownloadCoverTask(cover).execute(urlCover);
     }
 
     public class DownloadCoverTask extends AsyncTask<String, Void, Bitmap> {
@@ -48,8 +46,7 @@ public class ImageLoader {
             Bitmap bitmap = null;
             try {
                 URL url = new URL(urlCover);
-                URLConnection urlConnection = (URLConnection) url.getContent();
-                InputStream inputStream = urlConnection.getInputStream();
+                InputStream inputStream = url.openStream();
 
                 bitmap = BitmapFactory.decodeStream(inputStream);
             } catch (IOException e) {

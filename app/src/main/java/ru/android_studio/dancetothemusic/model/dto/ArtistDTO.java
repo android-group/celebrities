@@ -1,5 +1,9 @@
 package ru.android_studio.dancetothemusic.model.dto;
 
+import android.app.Activity;
+import android.content.res.Resources;
+
+import java.io.Serializable;
 import java.util.List;
 
 import io.realm.RealmList;
@@ -8,12 +12,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.android_studio.dancetothemusic.R;
 import ru.android_studio.dancetothemusic.model.db.ArtistDB;
 import ru.android_studio.dancetothemusic.model.db.Genre;
 
 @ToString
 @EqualsAndHashCode
-public class ArtistDTO {
+public class ArtistDTO implements Serializable{
 
     @PrimaryKey
     @Getter
@@ -81,5 +86,23 @@ public class ArtistDTO {
         artistDB.getLink(),
         artistDB.getDescription(),
         artistDB.getCover());
+    }
+
+    public String getGenreList() {
+        StringBuilder builder = new StringBuilder();
+        for (String genre : genres) {
+            builder.append(genre);
+            builder.append(", ");
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        return builder.toString();
+    }
+
+    public String getTraksText(Activity activity) {
+        return String.format("%d %s", getTracks(), activity.getString(R.string.tracks_info));
+    }
+
+    public String getAlbumsText(Activity activity) {
+        return String.format("%d %s", getAlbums(), activity.getString(R.string.albums_info));
     }
 }

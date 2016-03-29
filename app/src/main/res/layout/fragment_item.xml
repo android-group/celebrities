@@ -9,32 +9,43 @@
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:contentDescription="cover" />
+        android:contentDescription="@string/cover_description" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_weight="3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/artist_list_info_bar"
         android:orientation="vertical">
+
         <TextView
                 android:id="@+id/name"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin" />
+                android:layout_height="wrap_content" />
+
         <TextView
                 android:id="@+id/genres"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin" />
-        <TextView
-                android:id="@+id/tracks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin" />
-        <TextView
-                android:id="@+id/albums"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin" />
+                android:layout_height="wrap_content" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/artist_list_info_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/artist_list_info_bar"
+            android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/tracks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/artist_list_info_bar" />
+
+            <TextView
+                    android:id="@+id/albums"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
