@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,27 +17,20 @@ import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
 public class ArtistInfoActivity extends AppCompatActivity {
 
+    public ImageLoader imageLoader;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-
     @Bind(R.id.fab)
     FloatingActionButton emailICO;
-
     ArtistDTO currentArtist;
-
     @Bind(R.id.description)
     TextView descriptionTV;
-
     @Bind(R.id.albums)
     TextView albumsTV;
-
     @Bind(R.id.tracks)
     TextView tracksTV;
-
     @Bind(R.id.logo)
     ImageView imageView;
-
-    public ImageLoader imageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +40,11 @@ public class ArtistInfoActivity extends AppCompatActivity {
         // initialization http://jakewharton.github.io/butterknife/
         ButterKnife.bind(this);
         imageLoader = new ImageLoader(this);
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if(extras != null) {
+            if (extras != null) {
                 currentArtist = (ArtistDTO) extras.get("ARTIST_DTO");
-                if(currentArtist != null) {
+                if (currentArtist != null) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

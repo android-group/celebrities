@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
@@ -32,23 +31,29 @@ import ru.android_studio.dancetothemusic.retrofit_api.ArtistsAPI;
 
 /**
  * A fragment representing a list of Items.
- * <p />
+ * <p/>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
 public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
 
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String TAG = "ItemFragment";
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private Realm realm;
     private List<ArtistDTO> artistDTOList;
     private RecyclerView recyclerView;
     private AuthorItemRecyclerViewAdapter adapter;
 
-    private static final String TAG = "ItemFragment";
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public ItemFragment() {
+    }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
@@ -58,13 +63,6 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ItemFragment() {
     }
 
     @Override
@@ -139,13 +137,6 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     }
 
     /*
-    * Листнер обрабатывает клик по строчке
-    * */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(ArtistDTO item);
-    }
-
-    /*
     * При успешном соединении с сервером
     * Получение данных и сохранение в БД
     * */
@@ -188,9 +179,16 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     @Override
     public void onFailure(Call<ArtistDTO[]> call, Throwable t) {
         RealmResults<ArtistDB> artistDBRealmResults = realm.where(ArtistDB.class).findAll();
-        for(ArtistDB artistDB: artistDBRealmResults) {
+        for (ArtistDB artistDB : artistDBRealmResults) {
             artistDTOList.add(ArtistDTO.of(artistDB));
         }
         adapter.notifyDataSetChanged();
+    }
+
+    /*
+    * Листнер обрабатывает клик по строчке
+    * */
+    public interface OnListFragmentInteractionListener {
+        void onListFragmentInteraction(ArtistDTO item);
     }
 }

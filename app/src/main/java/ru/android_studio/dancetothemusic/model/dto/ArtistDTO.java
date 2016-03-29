@@ -1,10 +1,8 @@
 package ru.android_studio.dancetothemusic.model.dto;
 
 import android.app.Activity;
-import android.content.res.Resources;
 
 import java.io.Serializable;
-import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.annotations.PrimaryKey;
@@ -18,7 +16,7 @@ import ru.android_studio.dancetothemusic.model.db.Genre;
 
 @ToString
 @EqualsAndHashCode
-public class ArtistDTO implements Serializable{
+public class ArtistDTO implements Serializable {
 
     @PrimaryKey
     @Getter
@@ -70,22 +68,22 @@ public class ArtistDTO implements Serializable{
     public static ArtistDTO of(ArtistDB artistDB) {
         RealmList<Genre> genresDB = artistDB.getGenres();
         String[] genres = new String[genresDB.size()];
-        for(int i = 0; i < genresDB.size(); i++) {
+        for (int i = 0; i < genresDB.size(); i++) {
             Genre genre = genresDB.get(i);
-            if(genre != null) {
+            if (genre != null) {
                 genres[i] = genre.getName();
             }
         }
 
         return new ArtistDTO(
-        artistDB.getId(),
-        artistDB.getName(),
-        genres,
-        artistDB.getTracks(),
-        artistDB.getAlbums(),
-        artistDB.getLink(),
-        artistDB.getDescription(),
-        artistDB.getCover());
+                artistDB.getId(),
+                artistDB.getName(),
+                genres,
+                artistDB.getTracks(),
+                artistDB.getAlbums(),
+                artistDB.getLink(),
+                artistDB.getDescription(),
+                artistDB.getCover());
     }
 
     public String getGenreList() {
@@ -94,7 +92,7 @@ public class ArtistDTO implements Serializable{
             builder.append(genre);
             builder.append(", ");
         }
-        builder.deleteCharAt(builder.length() - 1);
+        builder.delete(builder.length() - 2, builder.length() - 1);
         return builder.toString();
     }
 

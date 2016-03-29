@@ -7,8 +7,7 @@
         android:name="ru.android_studio.dancetothemusic.ItemFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:background="#ECEFF1"
         app:layoutManager="LinearLayoutManager"
         tools:context="ru.android_studio.dancetothemusic.ItemFragment"
         tools:listitem="@layout/fragment_item"/>
