@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import lombok.EqualsAndHashCode;
@@ -19,14 +21,12 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
 
     private final List<ArtistDTO> items;
     private final OnListFragmentInteractionListener listener;
-    public ImageLoader imageLoader;
     public FragmentActivity activity;
 
     public AuthorItemRecyclerViewAdapter(FragmentActivity activity, List<ArtistDTO> items, OnListFragmentInteractionListener listener) {
         this.activity = activity;
         this.items = items;
         this.listener = listener;
-        imageLoader = new ImageLoader(activity);
     }
 
     @Override
@@ -45,13 +45,7 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
         }
 
         holder.setItem(artistDTO);
-
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                imageLoader.loadCover(artistDTO.getCover().getSmall(), holder.getCover());
-            }
-        });
+        Picasso.with(activity).load(artistDTO.getCover().getBig()).into(holder.getCover());
 
         holder.getName().setText(artistDTO.getName());
         holder.getTracks().setText(artistDTO.getTraksText(activity));

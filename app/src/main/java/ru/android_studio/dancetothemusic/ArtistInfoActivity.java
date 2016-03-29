@@ -11,13 +11,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
 public class ArtistInfoActivity extends AppCompatActivity {
 
-    public ImageLoader imageLoader;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.fab)
@@ -39,18 +40,13 @@ public class ArtistInfoActivity extends AppCompatActivity {
 
         // initialization http://jakewharton.github.io/butterknife/
         ButterKnife.bind(this);
-        imageLoader = new ImageLoader(this);
+
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 currentArtist = (ArtistDTO) extras.get("ARTIST_DTO");
                 if (currentArtist != null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageLoader.loadCover(currentArtist.getCover().getBig(), imageView);
-                        }
-                    });
+                    Picasso.with(getApplicationContext()).load(currentArtist.getCover().getBig()).into(imageView);
                     toolbar.setTitle(currentArtist.getName());
                     descriptionTV.setText(currentArtist.getDescription());
                     albumsTV.setText(currentArtist.getAlbumsText(this));
