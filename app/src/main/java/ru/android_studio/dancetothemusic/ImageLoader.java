@@ -8,6 +8,13 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+/*
+* Класс отвечающий за загрузку изображений
+* Использую 2 библиотеки
+ * Picasso - для загрузки изображений с сервера
+ * OkHttpClient - кэш
+ * Если не нашли изображения в кэше, тогда скачиваем их с сервера
+* */
 public class ImageLoader {
     public static void load(final Context context, final String url, final ImageView imageView) {
         Picasso.with(context)

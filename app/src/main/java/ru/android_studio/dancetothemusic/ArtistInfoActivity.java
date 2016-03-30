@@ -20,6 +20,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
+/*
+* Активити с информацией об исполнителе
+* */
 public class ArtistInfoActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)

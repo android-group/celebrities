@@ -15,6 +15,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
+/*
+* Главная активити со списком исполнителей
+* */
 public class ArtistListActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "ArtistListActivity";

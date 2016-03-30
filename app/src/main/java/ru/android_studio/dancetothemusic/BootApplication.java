@@ -5,6 +5,9 @@ import android.app.Application;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+/*
+* При загрузке устанавливаем в Picasso кэш OkHttpDownloader
+* */
 public class BootApplication extends Application {
     @Override
     public void onCreate() {

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import io.realm.Realm;
@@ -30,17 +31,17 @@ import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 import ru.android_studio.dancetothemusic.retrofit_api.ArtistsAPI;
 
 /**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
+ * Фрагмент со списком исполнителей.
+ *
+ * В этом классе происходит загрузка RecyclerView
+ * получени json с сервер через интернет (с помощью Retrofit),
+ * но если не получается,
+ * тогда загружаем список из бд sql lite (с помощью RealmDB)
  */
 public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String TAG = "ItemFragment";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private Realm realm;
@@ -48,14 +49,9 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     private RecyclerView recyclerView;
     private AuthorItemRecyclerViewAdapter adapter;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public ItemFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static ItemFragment newInstance(int columnCount) {
         ItemFragment fragment = new ItemFragment();
@@ -87,20 +83,18 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
+        // @TODO убрать хардкод
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://cache-default06e.cdn.yandex.net")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
-
-        // prepare call in Retrofit 2.0
         ArtistsAPI artistsAPI = retrofit.create(ArtistsAPI.class);
         Call<ArtistDTO[]> call = artistsAPI.loadArtists();
         call.enqueue(this);
-        // Create a RealmConfiguration which is to locate Realm file in package's "files" directory.
+
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext()).build();
-        // Get a Realm instance for this thread
         realm = Realm.getInstance(realmConfig);
 
         if (view instanceof RecyclerView) {
@@ -119,6 +113,11 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         return view;
     }
 
+    /**
+    * Важно context должен реализовывать интерфейс OnListFragmentInteractionListener
+     * мы должны обрабатываем клики по списку
+    * @throws RuntimeException - unchecked exceptions
+    * */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -144,31 +143,32 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     public void onResponse(Call<ArtistDTO[]> call, Response<ArtistDTO[]> response) {
         getActivity().setProgressBarIndeterminateVisibility(false);
 
-        RealmQuery<ArtistDB> artistDB = realm.where(ArtistDB.class);
-        Log.d(TAG, "Count of artists before persist: " + artistDB.count());
+        RealmQuery<ArtistDB> artistDBRealmQuery = realm.where(ArtistDB.class);
+        Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
 
         ArtistDTO[] artists = response.body();
 
-        /*
-        @TODO Перенести в асинхронный процесс
-        for (ArtistDTO artist : artists) {
-            // Persist your data easily
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(ArtistDB.of(artist));
-            realm.commitTransaction();
-        }*/
-
-        /*
-        * @TODO На форму добавить только первые 25, а дальше сделать паджинациию
-        * */
-        artistDTOList.addAll(Arrays.asList(artists));
+        if(artists != null) {
+            // Persist your data
+            for (ArtistDTO artist : artists) {
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(ArtistDB.of(artist));
+                realm.commitTransaction();
+            }
+            Log.d(TAG, "Count of artists after persist: " + artistDBRealmQuery.count());
+            artistDTOList.addAll(Arrays.asList(artists));
+        } else {
+            Collection<ArtistDTO> collection = new ArrayList<>();
+            for (ArtistDB artistDB : artistDBRealmQuery.findAll()) {
+                collection.add(ArtistDTO.of(artistDB));
+            }
+            artistDTOList.addAll(collection);
+        }
 
         /*
         * Обновление данных на UI
         * */
         adapter.notifyDataSetChanged();
-
-        Log.d(TAG, "Count of artists before persist: " + artistDB.count());
     }
 
     /*

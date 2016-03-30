@@ -2,16 +2,11 @@ package ru.android_studio.dancetothemusic;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -20,6 +15,9 @@ import lombok.ToString;
 import ru.android_studio.dancetothemusic.ItemFragment.OnListFragmentInteractionListener;
 import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
+/*
+* Класс в котором происходит маппинг из ArtistDTO в ViewHolder
+* */
 public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<ArtistDTO> items;

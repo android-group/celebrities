@@ -9,8 +9,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-@EqualsAndHashCode(callSuper = false)
-public class CoverDTO extends RealmObject implements Serializable {
+@EqualsAndHashCode
+public class CoverDTO implements Serializable {
 
     @Getter
     @Setter
