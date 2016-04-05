@@ -1,17 +1,11 @@
 package ru.android_studio.dancetothemusic.model.db;
 
 import io.realm.RealmObject;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@ToString
-@EqualsAndHashCode(callSuper = false)
+@Data
 public class Genre extends RealmObject {
 
-    @Getter
-    @Setter
     String name;
 
     public Genre(String name) {

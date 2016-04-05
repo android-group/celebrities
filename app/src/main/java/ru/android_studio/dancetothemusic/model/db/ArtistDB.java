@@ -3,47 +3,21 @@ package ru.android_studio.dancetothemusic.model.db;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
-@ToString
-@EqualsAndHashCode(callSuper = false)
+@Data
 public class ArtistDB extends RealmObject {
 
     @PrimaryKey
-    @Getter
-    @Setter
     private Integer id;
 
-    @Getter
-    @Setter
     private String name;
-
-    @Getter
-    @Setter
     private RealmList<Genre> genres;
-
-    @Getter
-    @Setter
     private Integer tracks;
-
-    @Getter
-    @Setter
     private Integer albums;
-
-    @Getter
-    @Setter
     private String link;
-
-    @Getter
-    @Setter
     private String description;
-
-    @Getter
-    @Setter
     private CoverDB cover;
 
     public ArtistDB() {
