@@ -17,6 +17,8 @@ import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
 /*
 * Главная активити со списком исполнителей
+* из-за того что использую плагин Lombok нужно настроить среду разработки + добавить плагин
+* Settings -> Compiler -> Annotation Processors
 * */
 public class ArtistListActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
 

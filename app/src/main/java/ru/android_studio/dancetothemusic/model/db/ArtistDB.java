@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
-import ru.android_studio.dancetothemusic.model.dto.CoverDTO;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
@@ -45,13 +44,13 @@ public class ArtistDB extends RealmObject {
 
     @Getter
     @Setter
-    private CoverDTO cover;
+    private CoverDB cover;
 
     public ArtistDB() {
 
     }
 
-    public ArtistDB(Integer id, String name, RealmList<Genre> genres, Integer tracks, Integer albums, String link, String description, CoverDTO cover) {
+    public ArtistDB(Integer id, String name, RealmList<Genre> genres, Integer tracks, Integer albums, String link, String description, CoverDB cover) {
         this.id = id;
         this.name = name;
         this.genres = genres;
@@ -72,6 +71,8 @@ public class ArtistDB extends RealmObject {
             genreRealmList.add(new Genre(genresDTO));
         }
 
-        return new ArtistDB(artistDTO.getId(), artistDTO.getName(), genreRealmList, artistDTO.getTracks(), artistDTO.getAlbums(), artistDTO.getLink(), artistDTO.getDescription(), artistDTO.getCover());
+        CoverDB coverDB = CoverDB.of(artistDTO.getCover());
+
+        return new ArtistDB(artistDTO.getId(), artistDTO.getName(), genreRealmList, artistDTO.getTracks(), artistDTO.getAlbums(), artistDTO.getLink(), artistDTO.getDescription(), coverDB);
     }
 }

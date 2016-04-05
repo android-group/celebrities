@@ -5,50 +5,21 @@ import android.app.Activity;
 import java.io.Serializable;
 
 import io.realm.RealmList;
-import io.realm.annotations.PrimaryKey;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import ru.android_studio.dancetothemusic.R;
 import ru.android_studio.dancetothemusic.model.db.ArtistDB;
 import ru.android_studio.dancetothemusic.model.db.Genre;
 
-@ToString
-@EqualsAndHashCode
+@Data
 public class ArtistDTO implements Serializable {
 
-    @PrimaryKey
-    @Getter
-    @Setter
     private Integer id;
-
-    @Getter
-    @Setter
     private String name;
-
-    @Getter
-    @Setter
     private String[] genres;
-
-    @Getter
-    @Setter
     private Integer tracks;
-
-    @Getter
-    @Setter
     private Integer albums;
-
-    @Getter
-    @Setter
     private String link;
-
-    @Getter
-    @Setter
     private String description;
-
-    @Getter
-    @Setter
     private CoverDTO cover;
 
     public ArtistDTO(Integer id, String name, String[] genres, Integer tracks, Integer albums, String link, String description, CoverDTO cover) {
@@ -83,7 +54,8 @@ public class ArtistDTO implements Serializable {
                 artistDB.getAlbums(),
                 artistDB.getLink(),
                 artistDB.getDescription(),
-                artistDB.getCover());
+                CoverDTO.of(artistDB.getCover())
+        );
     }
 
     public String getGenreList() {

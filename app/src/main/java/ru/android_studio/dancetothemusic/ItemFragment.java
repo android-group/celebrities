@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,12 +43,14 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String TAG = "ItemFragment";
+
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
-    private Realm realm;
-    private List<ArtistDTO> artistDTOList;
-    private RecyclerView recyclerView;
+
+    private OnListFragmentInteractionListener onListFragmentInteractionListener;
+    private List<ArtistDTO> artistDTOList = new ArrayList<>();
     private AuthorItemRecyclerViewAdapter adapter;
+
+    private Realm realm;
 
     public ItemFragment() {
     }
@@ -99,30 +102,34 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
 
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            recyclerView = (RecyclerView) view;
+            RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            artistDTOList = new ArrayList<>();
-            adapter = new AuthorItemRecyclerViewAdapter(getActivity(), artistDTOList, mListener);
+            adapter = new AuthorItemRecyclerViewAdapter(getActivity(), artistDTOList, onListFragmentInteractionListener, realm);
             recyclerView.setAdapter(adapter);
+
+            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
         }
         return view;
     }
 
     /**
-    * Важно context должен реализовывать интерфейс OnListFragmentInteractionListener
+     * Важно context должен реализовывать интерфейс OnListFragmentInteractionListener
      * мы должны обрабатываем клики по списку
-    * @throws RuntimeException - unchecked exceptions
-    * */
+     *
+     * @throws RuntimeException - unchecked exceptions
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            onListFragmentInteractionListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -132,7 +139,7 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        onListFragmentInteractionListener = null;
     }
 
     /*
@@ -147,14 +154,14 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
 
         ArtistDTO[] artists = response.body();
-
-        if(artists != null) {
+        if (artists != null) {
             // Persist your data
             for (ArtistDTO artist : artists) {
                 realm.beginTransaction();
                 realm.copyToRealmOrUpdate(ArtistDB.of(artist));
                 realm.commitTransaction();
             }
+
             Log.d(TAG, "Count of artists after persist: " + artistDBRealmQuery.count());
             artistDTOList.addAll(Arrays.asList(artists));
         } else {

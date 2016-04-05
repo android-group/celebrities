@@ -8,26 +8,33 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import ru.android_studio.dancetothemusic.ItemFragment.OnListFragmentInteractionListener;
+import ru.android_studio.dancetothemusic.model.db.ArtistDB;
 import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
 /*
 * Класс в котором происходит маппинг из ArtistDTO в ViewHolder
 * */
-public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorItemRecyclerViewAdapter.ViewHolder> {
+public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorItemRecyclerViewAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
     private final List<ArtistDTO> items;
     private final OnListFragmentInteractionListener listener;
+    private final Realm realm;
     public FragmentActivity activity;
 
-    public AuthorItemRecyclerViewAdapter(FragmentActivity activity, List<ArtistDTO> items, OnListFragmentInteractionListener listener) {
+    public AuthorItemRecyclerViewAdapter(FragmentActivity activity, List<ArtistDTO> items, OnListFragmentInteractionListener listener, Realm realm) {
         this.activity = activity;
         this.items = items;
         this.listener = listener;
+        this.realm = realm;
+
     }
 
     @Override
@@ -69,6 +76,34 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(items, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(items, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        ArtistDTO artistDTO = items.get(position);
+        RealmResults<ArtistDB> results = realm.where(ArtistDB.class).equalTo("id", artistDTO.getId()).findAll();
+
+        realm.beginTransaction();
+        results.clear();
+        realm.commitTransaction();
+
+        items.remove(position);
+        notifyItemRemoved(position);
     }
 
     @ToString

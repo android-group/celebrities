@@ -9,7 +9,8 @@
     tools:context="ru.android_studio.dancetothemusic.ArtistListActivity"
     tools:showIn="@layout/activity_artist_list">
 
-    <fragment android:name="ru.android_studio.dancetothemusic.ItemFragment"
+    <fragment
+        android:name="ru.android_studio.dancetothemusic.ItemFragment"
         android:id="@+id/article_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
