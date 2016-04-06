@@ -12,24 +12,22 @@ import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import ru.android_studio.dancetothemusic.ItemFragment.OnListFragmentInteractionListener;
 import ru.android_studio.dancetothemusic.model.db.ArtistDB;
-import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 
 /*
 * Класс в котором происходит маппинг из ArtistDTO в ViewHolder
 * */
 public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorItemRecyclerViewAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
-    private final List<ArtistDTO> items;
+    private final List<ArtistDB> items;
     private final OnListFragmentInteractionListener listener;
     private final Realm realm;
     public FragmentActivity activity;
 
-    public AuthorItemRecyclerViewAdapter(FragmentActivity activity, List<ArtistDTO> items, OnListFragmentInteractionListener listener, Realm realm) {
+    public AuthorItemRecyclerViewAdapter(FragmentActivity activity, List<ArtistDB> items, OnListFragmentInteractionListener listener, Realm realm) {
         this.activity = activity;
         this.items = items;
         this.listener = listener;
@@ -46,22 +44,22 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final ArtistDTO artistDTO = items.get(position);
-        if (artistDTO == null) {
+        final ArtistDB artistDB = items.get(position);
+        if (artistDB == null) {
             System.out.println("artistDTO is null on position: " + position);
             return;
         }
 
-        holder.setItem(artistDTO);
+        holder.setItem(artistDB);
 
         ImageView imageView = holder.getCover();
-        String url = artistDTO.getCover().getSmall();
+        String url = artistDB.getCover().getSmall();
         ImageLoader.load(activity, url, imageView);
 
-        holder.getName().setText(artistDTO.getName());
-        holder.getTracks().setText(artistDTO.getTraksText(activity));
-        holder.getGenres().setText(artistDTO.getGenreList());
-        holder.getAlbums().setText(artistDTO.getAlbumsText(activity));
+        holder.getName().setText(artistDB.getName());
+        holder.getTracks().setText(artistDB.getTraksText(activity));
+        holder.getGenres().setText(artistDB.getGenreList());
+        holder.getAlbums().setText(artistDB.getAlbumsText(activity));
 
         holder.getView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,11 +93,18 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
 
     @Override
     public void onItemDismiss(int position) {
-        ArtistDTO artistDTO = items.get(position);
-        RealmResults<ArtistDB> results = realm.where(ArtistDB.class).equalTo("id", artistDTO.getId()).findAll();
+        ArtistDB artistDTO = items.get(position);
+        ArtistDB resultArtistDB = realm.where(ArtistDB.class).equalTo("id", artistDTO.getId()).findFirst();
 
+        Number maxOrderId = realm.where(ArtistDB.class).max("orderId");
         realm.beginTransaction();
-        results.clear();
+        if (maxOrderId == null) {
+            resultArtistDB.setOrderId(1);
+        } else {
+            resultArtistDB.setOrderId(maxOrderId.intValue() + 1);
+        }
+
+        realm.copyToRealmOrUpdate(resultArtistDB);
         realm.commitTransaction();
 
         items.remove(position);
@@ -116,7 +121,7 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
         private final TextView genres;
         private final TextView tracks;
         private final TextView albums;
-        private ArtistDTO item;
+        private ArtistDB item;
 
         public ViewHolder(View view) {
             super(view);
@@ -154,11 +159,11 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
             return albums;
         }
 
-        public ArtistDTO getItem() {
+        public ArtistDB getItem() {
             return item;
         }
 
-        public void setItem(ArtistDTO item) {
+        public void setItem(ArtistDB item) {
             this.item = item;
         }
     }

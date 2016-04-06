@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
@@ -47,7 +47,7 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     private int mColumnCount = 1;
 
     private OnListFragmentInteractionListener onListFragmentInteractionListener;
-    private List<ArtistDTO> artistDTOList = new ArrayList<>();
+    private List<ArtistDB> artistDTOList = new ArrayList<>();
     private AuthorItemRecyclerViewAdapter adapter;
 
     private Realm realm;
@@ -153,24 +153,21 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         RealmQuery<ArtistDB> artistDBRealmQuery = realm.where(ArtistDB.class);
         Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
 
-        ArtistDTO[] artists = response.body();
-        if (artists != null) {
+        List<ArtistDTO> artists = Arrays.asList(response.body());
+        if (!artists.isEmpty()) {
             // Persist your data
-            for (ArtistDTO artist : artists) {
+            for (int i = 0; i < artists.size(); i++) {
+                ArtistDTO artist = artists.get(i);
                 realm.beginTransaction();
-                realm.copyToRealmOrUpdate(ArtistDB.of(artist));
+                ArtistDB artistDB = ArtistDB.of(artist, i);
+                realm.copyToRealmOrUpdate(artistDB);
+                artistDTOList.add(artistDB);
                 realm.commitTransaction();
             }
-
-            Log.d(TAG, "Count of artists after persist: " + artistDBRealmQuery.count());
-            artistDTOList.addAll(Arrays.asList(artists));
         } else {
-            Collection<ArtistDTO> collection = new ArrayList<>();
-            for (ArtistDB artistDB : artistDBRealmQuery.findAll()) {
-                collection.add(ArtistDTO.of(artistDB));
-            }
-            artistDTOList.addAll(collection);
+            artistDTOList.addAll(artistDBRealmQuery.findAllSorted("orderId"));
         }
+        Collections.sort(artistDTOList);
 
         /*
         * Обновление данных на UI
@@ -186,9 +183,7 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     @Override
     public void onFailure(Call<ArtistDTO[]> call, Throwable t) {
         RealmResults<ArtistDB> artistDBRealmResults = realm.where(ArtistDB.class).findAll();
-        for (ArtistDB artistDB : artistDBRealmResults) {
-            artistDTOList.add(ArtistDTO.of(artistDB));
-        }
+        artistDTOList.addAll(artistDBRealmResults);
         adapter.notifyDataSetChanged();
     }
 
@@ -196,6 +191,6 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     * Листнер обрабатывает клик по строчке
     * */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(ArtistDTO item);
+        void onListFragmentInteraction(ArtistDB item);
     }
 }

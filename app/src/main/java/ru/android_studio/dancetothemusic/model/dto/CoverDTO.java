@@ -6,7 +6,7 @@ import lombok.Data;
 import ru.android_studio.dancetothemusic.model.db.CoverDB;
 
 @Data
-public class CoverDTO implements Serializable {
+public class CoverDTO {
 
     private String small;
 

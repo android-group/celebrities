@@ -13,7 +13,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
+import ru.android_studio.dancetothemusic.model.db.ArtistDB;
 
 /*
 * Главная активити со списком исполнителей
@@ -22,12 +22,12 @@ import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
 * */
 public class ArtistListActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
 
-    private static final String TAG = "ArtistListActivity";
+    public static final String EXTRAS_ARTIST_ID = "ARTIST_DB";
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.fab)
     FloatingActionButton floatingActionButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +53,16 @@ public class ArtistListActivity extends AppCompatActivity implements ItemFragmen
     * Переход по клику в информацию об артисте
     * */
     @Override
-    public void onListFragmentInteraction(ArtistDTO artistDTO) {
+    public void onListFragmentInteraction(ArtistDB artistDB) {
         Intent intent = new Intent(this, ArtistInfoActivity.class);
-        intent.putExtra("ARTIST_DTO", artistDTO);
+        intent.putExtra(EXTRAS_ARTIST_ID, artistDB.getId());
         startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     @Override

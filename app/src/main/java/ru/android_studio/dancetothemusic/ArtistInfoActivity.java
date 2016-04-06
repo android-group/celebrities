@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import ru.android_studio.dancetothemusic.model.db.ArtistDB;
 
 /*
 * Активити с информацией об исполнителе
@@ -38,7 +40,9 @@ public class ArtistInfoActivity extends AppCompatActivity {
     @Bind(R.id.header_cover)
     ImageView imageView;
 
-    ArtistDTO currentArtist;
+    ArtistDB currentArtist;
+
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +52,14 @@ public class ArtistInfoActivity extends AppCompatActivity {
         // initialization http://jakewharton.github.io/butterknife/
         ButterKnife.bind(this);
 
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getApplicationContext()).build();
+        realm = Realm.getInstance(realmConfig);
+
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                currentArtist = (ArtistDTO) extras.get("ARTIST_DTO");
+                Integer id = (Integer) extras.get(ArtistListActivity.EXTRAS_ARTIST_ID);
+                currentArtist = realm.where(ArtistDB.class).equalTo("id", id).findFirst();
                 if (currentArtist != null) {
 
                     String url = currentArtist.getCover().getBig();
@@ -85,5 +93,12 @@ public class ArtistInfoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+        realm = null;
     }
 }

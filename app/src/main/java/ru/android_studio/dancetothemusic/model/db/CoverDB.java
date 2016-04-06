@@ -1,5 +1,7 @@
 package ru.android_studio.dancetothemusic.model.db;
 
+import java.io.Serializable;
+
 import io.realm.RealmObject;
 import lombok.Data;
 import ru.android_studio.dancetothemusic.model.dto.CoverDTO;
