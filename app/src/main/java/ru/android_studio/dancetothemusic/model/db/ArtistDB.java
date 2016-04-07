@@ -89,7 +89,9 @@ public class ArtistDB extends RealmObject implements Comparable<ArtistDB> {
             builder.append(genre);
             builder.append(", ");
         }
-        builder.delete(builder.length() - 2, builder.length() - 1);
+        if(builder.length() > 0) {
+            builder.delete(builder.length() - 2, builder.length() - 1);
+        }
         return builder.toString();
     }
 
