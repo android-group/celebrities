@@ -54,7 +54,7 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<AuthorIt
 
         ImageView imageView = holder.getCover();
         String url = artistDB.getCover().getSmall();
-        ImageLoader.load(activity, url, imageView);
+        ImageLoader.loadByUrlToImageView(activity, url, imageView);
 
         holder.getName().setText(artistDB.getName());
         holder.getTracks().setText(artistDB.getTraksText(activity));

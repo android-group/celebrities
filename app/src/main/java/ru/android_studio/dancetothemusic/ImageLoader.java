@@ -1,12 +1,14 @@
 package ru.android_studio.dancetothemusic;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 /*
 * Класс отвечающий за загрузку изображений
@@ -16,7 +18,8 @@ import com.squareup.picasso.Picasso;
  * Если не нашли изображения в кэше, тогда скачиваем их с сервера
 * */
 public class ImageLoader {
-    public static void load(final Context context, final String url, final ImageView imageView) {
+    public static void loadByUrlToImageView(final Context context, final String url, final ImageView imageView) {
+
         Picasso.with(context)
                 .load(url)
                 .networkPolicy(NetworkPolicy.OFFLINE)
@@ -34,7 +37,7 @@ public class ImageLoader {
                                 .into(imageView, new Callback() {
                                     @Override
                                     public void onSuccess() {
-
+                                        Log.d("Load img from url:", url);
                                     }
 
                                     @Override

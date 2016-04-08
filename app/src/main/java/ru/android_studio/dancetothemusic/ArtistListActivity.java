@@ -22,7 +22,7 @@ import ru.android_studio.dancetothemusic.model.db.ArtistDB;
 * */
 public class ArtistListActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
 
-    public static final String EXTRAS_ARTIST_ID = "ARTIST_DB";
+    public static final String EXTRAS_ARTIST_ID = "ARTIST_ID";
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;

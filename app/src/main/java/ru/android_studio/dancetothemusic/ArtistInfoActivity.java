@@ -44,6 +44,8 @@ public class ArtistInfoActivity extends AppCompatActivity {
 
     private Realm realm;
 
+    private Integer artistId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +60,8 @@ public class ArtistInfoActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                Integer id = (Integer) extras.get(ArtistListActivity.EXTRAS_ARTIST_ID);
-                currentArtist = realm.where(ArtistDB.class).equalTo("id", id).findFirst();
-                if (currentArtist != null) {
-
-                    String url = currentArtist.getCover().getBig();
-                    ImageLoader.load(getApplicationContext(), url, imageView);
-
-                    toolbar.setTitle(currentArtist.getName());
-                    descriptionTV.setText(currentArtist.getDescription());
-                    albumsTV.setText(currentArtist.getAlbumsText(this));
-                    tracksTV.setText(currentArtist.getTraksText(this));
-                }
+                artistId = (Integer) extras.get(ArtistListActivity.EXTRAS_ARTIST_ID);
+                loadByArtistId();
             }
         }
 
@@ -81,6 +73,25 @@ public class ArtistInfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void loadByArtistId() {
+        if(artistId == null) {
+            return;
+        }
+
+        currentArtist = realm.where(ArtistDB.class).equalTo("id", artistId).findFirst();
+        if (currentArtist == null) {
+            return;
+        }
+
+        String url = currentArtist.getCover().getBig();
+        ImageLoader.loadByUrlToImageView(getApplicationContext(), url, imageView);
+
+        toolbar.setTitle(currentArtist.getName());
+        descriptionTV.setText(currentArtist.getDescription());
+        albumsTV.setText(currentArtist.getAlbumsText(this));
+        tracksTV.setText(currentArtist.getTraksText(this));
     }
 
     @Override
@@ -100,5 +111,25 @@ public class ArtistInfoActivity extends AppCompatActivity {
         super.onDestroy();
         realm.close();
         realm = null;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        savedInstanceState.putInt(ArtistListActivity.EXTRAS_ARTIST_ID, artistId);
+        // etc.
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore UI state from the savedInstanceState.
+        // This bundle has also been passed to onCreate.
+        artistId = savedInstanceState.getInt(ArtistListActivity.EXTRAS_ARTIST_ID);
+        loadByArtistId();
     }
 }
