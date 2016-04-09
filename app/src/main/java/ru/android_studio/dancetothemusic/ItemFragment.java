@@ -1,6 +1,7 @@
 package ru.android_studio.dancetothemusic;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,10 +13,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -43,6 +50,7 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private static final String TAG = "ItemFragment";
+    private static final String LAST_MODIFIED = "Last-Modified";
 
     private int mColumnCount = 1;
 
@@ -93,12 +101,16 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
-        ArtistsAPI artistsAPI = retrofit.create(ArtistsAPI.class);
-        Call<ArtistDTO[]> call = artistsAPI.loadArtists();
-        call.enqueue(this);
-
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext()).build();
         realm = Realm.getInstance(realmConfig);
+
+        ArtistsAPI artistsAPI = retrofit.create(ArtistsAPI.class);
+        if(isNeedUpdateDB(artistsAPI)) {
+            Call<ArtistDTO[]> call = artistsAPI.loadArtists();
+            call.enqueue(this);
+        } else {
+            loadArtistListFromDB();
+        }
 
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -117,6 +129,45 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
             itemTouchHelper.attachToRecyclerView(recyclerView);
         }
         return view;
+    }
+
+    /*
+    * Проверяем нужно обновлять данные в БД или нет.
+    * результат определяем по дате последнего обновления LAST_MODIFIED из заголовка
+    * */
+    private boolean isNeedUpdateDB(ArtistsAPI artistsAPI) {
+        String lastModifiedDB = readLastModifiedDB(LAST_MODIFIED);
+        if(lastModifiedDB != null) {
+            String lastModifiedResponse = null;
+            try {
+                lastModifiedResponse = artistsAPI.getLoadArtistsHeader().execute().headers().get(LAST_MODIFIED);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (lastModifiedResponse != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                        "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+                try {
+                    Calendar calendarResponse = Calendar.getInstance();
+                    calendarResponse.setTime(dateFormat.parse(lastModifiedResponse));
+
+                    Calendar calendarDB = Calendar.getInstance();
+                    calendarDB.setTime(dateFormat.parse(lastModifiedDB));
+
+                    return calendarResponse.after(calendarDB);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
+    }
+
+    private String readLastModifiedDB(String key) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getString(key, null);
     }
 
     /**
@@ -148,10 +199,8 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
     * */
     @Override
     public void onResponse(Call<ArtistDTO[]> call, Response<ArtistDTO[]> response) {
+        writeLastModifiedDB(response);
         getActivity().setProgressBarIndeterminateVisibility(false);
-
-        RealmQuery<ArtistDB> artistDBRealmQuery = realm.where(ArtistDB.class);
-        Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
 
         List<ArtistDTO> artists = Arrays.asList(response.body());
         if (!artists.isEmpty()) {
@@ -164,15 +213,31 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
                 artistDTOList.add(artistDB);
                 realm.commitTransaction();
             }
+            Collections.sort(artistDTOList);
         } else {
-            artistDTOList.addAll(artistDBRealmQuery.findAllSorted("orderId"));
+            loadArtistListFromDB();
         }
-        Collections.sort(artistDTOList);
+
 
         /*
         * Обновление данных на UI
         * */
         adapter.notifyDataSetChanged();
+    }
+
+    private void loadArtistListFromDB() {
+        RealmQuery<ArtistDB> artistDBRealmQuery = realm.where(ArtistDB.class);
+        Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
+
+        artistDTOList.addAll(artistDBRealmQuery.findAllSorted("orderId"));
+        Collections.sort(artistDTOList);
+    }
+
+    private void writeLastModifiedDB(Response<ArtistDTO[]> response) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(LAST_MODIFIED, response.headers().get(LAST_MODIFIED));
+        editor.apply();
     }
 
     /*
