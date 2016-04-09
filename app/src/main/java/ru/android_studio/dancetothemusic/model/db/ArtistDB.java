@@ -86,11 +86,11 @@ public class ArtistDB extends RealmObject implements Comparable<ArtistDB> {
     public String getGenreList() {
         StringBuilder builder = new StringBuilder();
         for (GenreDB genre : genres) {
-            builder.append(genre);
+            builder.append(genre.getName());
             builder.append(", ");
         }
         if(builder.length() > 0) {
-            builder.delete(builder.length() - 2, builder.length() - 1);
+            builder.delete(builder.length() - 2, builder.length());
         }
         return builder.toString();
     }
