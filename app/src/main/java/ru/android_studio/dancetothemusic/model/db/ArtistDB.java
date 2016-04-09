@@ -1,6 +1,6 @@
 package ru.android_studio.dancetothemusic.model.db;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import io.realm.RealmList;
@@ -95,11 +95,11 @@ public class ArtistDB extends RealmObject implements Comparable<ArtistDB> {
         return builder.toString();
     }
 
-    public String getTraksText(Activity activity) {
-        return String.format("%d %s", getTracks(), activity.getString(R.string.tracks_info));
+    public String getTraksText(Context context) {
+        return String.format("%d %s", getTracks(), context.getString(R.string.tracks_info));
     }
 
-    public String getAlbumsText(Activity activity) {
-        return String.format("%d %s", getAlbums(), activity.getString(R.string.albums_info));
+    public String getAlbumsText(Context context) {
+        return String.format("%d %s", getAlbums(), context.getString(R.string.albums_info));
     }
 }
