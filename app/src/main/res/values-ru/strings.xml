@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Знаменитости</string>
+    <string name="albums_info">песен</string>
+    <string name="action_settings">Настройки</string>
+    <string name="biography">Биография</string>
+    <string name="cover_description">обложка</string>
+    <string name="tracks_info">альбомов</string>
+</resources>
