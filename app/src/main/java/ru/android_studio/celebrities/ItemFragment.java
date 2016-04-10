@@ -1,5 +1,6 @@
 package ru.android_studio.celebrities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -88,10 +89,16 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         realm = null;
     }
 
+    ProgressDialog progressDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+
+        progressDialog = ProgressDialog
+                .show(getContext(),
+                getString(R.string.loading_title),
+                getString(R.string.loading_msg));
 
         // @TODO убрать хардкод
         Retrofit retrofit = new Retrofit.Builder()
@@ -109,6 +116,7 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
             call.enqueue(this);
         } else {
             loadArtistListFromDB();
+            progressDialog.hide();
         }
 
         if (view instanceof RecyclerView) {
@@ -222,6 +230,7 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         * Обновление данных на UI
         * */
         adapter.notifyDataSetChanged();
+        progressDialog.hide();
     }
 
     private void loadArtistListFromDB() {
@@ -249,6 +258,7 @@ public class ItemFragment extends Fragment implements Callback<ArtistDTO[]> {
         RealmResults<ArtistDB> artistDBRealmResults = realm.where(ArtistDB.class).findAll();
         artistDTOList.addAll(artistDBRealmResults);
         adapter.notifyDataSetChanged();
+        progressDialog.hide();
     }
 
     /*

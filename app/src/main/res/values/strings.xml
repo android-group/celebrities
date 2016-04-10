@@ -5,4 +5,6 @@
     <string name="tracks_info">album</string>
     <string name="biography">Biography</string>
     <string name="cover_description">cover</string>
+    <string name="loading_title">Пожалуйста подождите</string>
+    <string name="loading_msg">Загружается список знаменитостей</string>
 </resources>

@@ -6,4 +6,6 @@
     <string name="biography">Biography</string>
     <string name="cover_description">cover</string>
     <string name="tracks_info">album</string>
+    <string name="loading_msg">Loading list of celebrities</string>
+    <string name="loading_title">Please wait</string>
 </resources>
