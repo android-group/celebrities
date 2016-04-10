@@ -26,7 +26,7 @@ public class ArtistListActivity extends AppCompatActivity implements ItemFragmen
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.fab)
+    @Bind(R.id.heart)
     FloatingActionButton floatingActionButton;
 
     @Override
@@ -44,7 +44,7 @@ public class ArtistListActivity extends AppCompatActivity implements ItemFragmen
 
     }
 
-    @OnClick(R.id.fab)
+    @OnClick(R.id.heart)
     void play() {
         Toast.makeText(this, "Hello, views!", Toast.LENGTH_SHORT).show();
     }
