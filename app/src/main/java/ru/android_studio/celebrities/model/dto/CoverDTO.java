@@ -1,9 +1,7 @@
-package ru.android_studio.dancetothemusic.model.dto;
-
-import java.io.Serializable;
+package ru.android_studio.celebrities.model.dto;
 
 import lombok.Data;
-import ru.android_studio.dancetothemusic.model.db.CoverDB;
+import ru.android_studio.celebrities.model.db.CoverDB;
 
 @Data
 public class CoverDTO {

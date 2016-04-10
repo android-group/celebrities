@@ -1,8 +1,8 @@
-package ru.android_studio.dancetothemusic.model.db;
+package ru.android_studio.celebrities.model.db;
 
 import io.realm.RealmObject;
 import lombok.Data;
-import ru.android_studio.dancetothemusic.model.dto.CoverDTO;
+import ru.android_studio.celebrities.model.dto.CoverDTO;
 
 @Data
 public class CoverDB extends RealmObject {

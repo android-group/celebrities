@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,8 @@ import java.util.Collections;
 import java.util.List;
 
 import io.realm.Realm;
-import ru.android_studio.dancetothemusic.ItemFragment.OnListFragmentInteractionListener;
-import ru.android_studio.dancetothemusic.model.db.ArtistDB;
+import ru.android_studio.celebrities.ItemFragment.OnListFragmentInteractionListener;
+import ru.android_studio.celebrities.model.db.ArtistDB;
 
 /*
 * Класс в котором происходит маппинг из ArtistDTO в ViewHolder

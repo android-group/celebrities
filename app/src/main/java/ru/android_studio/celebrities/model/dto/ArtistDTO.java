@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic.model.dto;
+package ru.android_studio.celebrities.model.dto;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 public interface ItemTouchHelperAdapter {
     boolean onItemMove(int fromPosition, int toPosition);

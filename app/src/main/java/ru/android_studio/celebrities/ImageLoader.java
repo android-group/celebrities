@@ -1,14 +1,12 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 /*
 * Класс отвечающий за загрузку изображений

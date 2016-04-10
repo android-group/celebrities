@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;

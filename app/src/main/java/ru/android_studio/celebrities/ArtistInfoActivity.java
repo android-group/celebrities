@@ -1,10 +1,11 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import ru.android_studio.dancetothemusic.model.db.ArtistDB;
+import ru.android_studio.celebrities.model.db.ArtistDB;
 
 /*
 * Активити с информацией об исполнителе
@@ -40,11 +41,11 @@ public class ArtistInfoActivity extends AppCompatActivity {
     @Bind(R.id.header_cover)
     ImageView imageView;
 
-    ArtistDB currentArtist;
-
     private Realm realm;
 
+    private ArtistDB currentArtist;
     private Integer artistId;
+    public static final String TAG = "ArtistInfoActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class ArtistInfoActivity extends AppCompatActivity {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 artistId = (Integer) extras.get(ArtistListActivity.EXTRAS_ARTIST_ID);
-                loadByArtistId();
+                loadByArtistId(artistId);
             }
         }
 
@@ -73,23 +74,61 @@ public class ArtistInfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        findViewById(R.id.previous).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.i("ArtistInfoActivity", "previous artistId: "+ artistId);
+                loadByOrderId(currentArtist.getOrderId() - 1);
+            }
+        });
+
+        findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.i("ArtistInfoActivity", "next artistId: "+ artistId);
+                loadByOrderId(currentArtist.getOrderId() + 1);
+            }
+        });
     }
 
-    private void loadByArtistId() {
-        if(artistId == null) {
+    private void loadByArtistId(Integer artistId) {
+        Log.i(TAG, "loadByArtistId artist");
+        if (artistId == null) {
             return;
         }
 
-        currentArtist = realm.where(ArtistDB.class).equalTo("id", artistId).findFirst();
-        if (currentArtist == null) {
+        ArtistDB found = realm.where(ArtistDB.class).equalTo("id", artistId).findFirst();
+        load(found);
+    }
+
+    private void loadByOrderId(Integer orderId) {
+        Log.i(TAG, "loadByOrderId artist");
+        if (orderId == null) {
             return;
         }
+
+        ArtistDB found = realm.where(ArtistDB.class).equalTo("orderId", orderId).findFirst();
+        load(found);
+    }
+
+    private void load(ArtistDB artistDB) {
+        Log.i(TAG, "load artist");
+        if (artistDB == null) {
+            return;
+        }
+        currentArtist = artistDB;
 
         String url = currentArtist.getCover().getBig();
         ImageLoader.loadByUrlToImageView(getApplicationContext(), url, imageView);
 
+        Log.i(TAG, "Set current artist name: " + currentArtist.getName());
         toolbar.setTitle(currentArtist.getName());
+        Log.i(TAG, "Set current artist name: " + currentArtist.getDescription());
         descriptionTV.setText(currentArtist.getDescription());
+
         albumsTV.setText(currentArtist.getAlbumsText(this));
         tracksTV.setText(currentArtist.getTraksText(this));
     }
@@ -130,6 +169,6 @@ public class ArtistInfoActivity extends AppCompatActivity {
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
         artistId = savedInstanceState.getInt(ArtistListActivity.EXTRAS_ARTIST_ID);
-        loadByArtistId();
+        loadByArtistId(artistId);
     }
 }

@@ -5,4 +5,4 @@
 * из-за баги в RealmDB - нельзя сохранить массив String[]
 * сделал отдельный класс Genre
 * */
-package ru.android_studio.dancetothemusic.model.db;
+package ru.android_studio.celebrities.model.db;

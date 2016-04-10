@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic.model.db;
+package ru.android_studio.celebrities.model.db;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,8 +7,8 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import lombok.Data;
-import ru.android_studio.dancetothemusic.R;
-import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
+import ru.android_studio.celebrities.R;
+import ru.android_studio.celebrities.model.dto.ArtistDTO;
 
 @Data
 public class ArtistDB extends RealmObject implements Comparable<ArtistDB> {

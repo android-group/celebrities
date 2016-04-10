@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import ru.android_studio.dancetothemusic.model.db.ArtistDB;
+import ru.android_studio.celebrities.model.db.ArtistDB;
 
 @ToString
 @EqualsAndHashCode(callSuper = false)
@@ -32,7 +32,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         this.tracks = (TextView) view.findViewById(R.id.tracks);
         this.albums = (TextView) view.findViewById(R.id.albums);
     }
-
 
     public View getView() {
         return view;

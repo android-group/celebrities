@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import ru.android_studio.dancetothemusic.model.db.ArtistDB;
+import ru.android_studio.celebrities.model.db.ArtistDB;
 
 /*
 * Главная активити со списком исполнителей

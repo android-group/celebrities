@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic.model.db;
+package ru.android_studio.celebrities.model.db;
 
 import io.realm.RealmObject;
 import lombok.Data;

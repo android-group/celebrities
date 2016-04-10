@@ -1,4 +1,4 @@
-package ru.android_studio.dancetothemusic;
+package ru.android_studio.celebrities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,9 +33,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-import ru.android_studio.dancetothemusic.model.db.ArtistDB;
-import ru.android_studio.dancetothemusic.model.dto.ArtistDTO;
-import ru.android_studio.dancetothemusic.retrofit_api.ArtistsAPI;
+import ru.android_studio.celebrities.model.db.ArtistDB;
+import ru.android_studio.celebrities.model.dto.ArtistDTO;
+import ru.android_studio.celebrities.retrofit_api.ArtistsAPI;
 
 /**
  * Фрагмент со списком исполнителей.

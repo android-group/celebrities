@@ -8,5 +8,5 @@
     android:layout_height="match_parent"
     android:background="#ECEFF1"
     app:layoutManager="LinearLayoutManager"
-    tools:context="ru.android_studio.dancetothemusic.ItemFragment"
+    tools:context="ru.android_studio.celebrities.ItemFragment"
     tools:listitem="@layout/fragment_item" />
