@@ -79,8 +79,8 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<ViewHold
 
     @Override
     public void onItemDismiss(int position) {
-        ArtistDB artistDTO = items.get(position);
-        ArtistDB resultArtistDB = realm.where(ArtistDB.class).equalTo("id", artistDTO.getId()).findFirst();
+        ArtistDB artistDB = items.get(position);
+        ArtistDB resultArtistDB = realm.where(ArtistDB.class).equalTo("id", artistDB.getId()).findFirst();
 
         Number maxOrderId = realm.where(ArtistDB.class).max("orderId");
         realm.beginTransaction();
@@ -94,6 +94,10 @@ public class AuthorItemRecyclerViewAdapter extends RecyclerView.Adapter<ViewHold
         realm.commitTransaction();
 
         items.remove(position);
+        items.add(resultArtistDB);
+
         notifyItemRemoved(position);
+        notifyItemInserted(items.size()-1);
+        notifyDataSetChanged();
     }
 }
