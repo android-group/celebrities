@@ -22,10 +22,11 @@ import ru.android_studio.celebrities.model.db.ArtistDB;
 * */
 public class ArtistListActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
 
-    public static final String EXTRAS_ARTIST_ID = "ARTIST_ID";
+    public static final String EXTRAS_ORDER_ID = "ORDER_ID";
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
     @Bind(R.id.heart)
     FloatingActionButton floatingActionButton;
 
@@ -55,7 +56,7 @@ public class ArtistListActivity extends AppCompatActivity implements ItemFragmen
     @Override
     public void onListFragmentInteraction(ArtistDB artistDB) {
         Intent intent = new Intent(this, ArtistInfoActivity.class);
-        intent.putExtra(EXTRAS_ARTIST_ID, artistDB.getId());
+        intent.putExtra(EXTRAS_ORDER_ID, artistDB.getOrderId());
         startActivity(intent);
     }
 

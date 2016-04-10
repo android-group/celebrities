@@ -21,6 +21,7 @@ import ru.android_studio.celebrities.model.db.ArtistDB;
 public class ArtistInfoFragment extends Fragment {
 
     private ArtistDB currentArtist;
+
     private Realm realm;
 
     @Bind(R.id.toolbar)
@@ -41,7 +42,7 @@ public class ArtistInfoFragment extends Fragment {
     @Bind(R.id.header_cover)
     ImageView imageView;
 
-    private int artistId;
+    private int orderId;
 
     public static final String TAG = "ArtistInfoFragment";
 
@@ -65,34 +66,23 @@ public class ArtistInfoFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         if(savedInstanceState != null) {
-            artistId = savedInstanceState.getInt("artistId");
+            orderId = savedInstanceState.getInt(ArtistListActivity.EXTRAS_ORDER_ID);
         } else {
-            artistId = getArguments().getInt("artistId");
+            orderId = getArguments().getInt(ArtistListActivity.EXTRAS_ORDER_ID);
         }
-        loadByArtistId();
+        Log.i(TAG, "loadByOrderId orderId: " + orderId);
+        loadByOrderId();
 
         return view;
     }
 
-    private void loadByOrderId(Integer orderId) {
-        Log.i(TAG, "loadByOrderId artist");
-        if (orderId == null) {
-            return;
-        }
+    private void loadByOrderId() {
 
         ArtistDB found = realm.where(ArtistDB.class).equalTo("orderId", orderId).findFirst();
         load(found);
     }
 
-    private void loadByArtistId() {
-        Log.i(TAG, "loadByArtistId artist");
-
-        ArtistDB found = realm.where(ArtistDB.class).equalTo("id", artistId).findFirst();
-        load(found);
-    }
-
     private void load(ArtistDB artistDB) {
-        Log.i(TAG, "load artist");
         if (artistDB == null) {
             return;
         }
