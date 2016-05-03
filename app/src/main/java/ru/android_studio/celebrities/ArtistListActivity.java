@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -61,25 +61,34 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     public static final int FIRST_LOAD_SIZE = 5;
     private static final String TAG = "ItemFragment";
     private static final String LAST_MODIFIED = "Last-Modified";
-    private static RealmResults<ArtistDB> artistDBRealmResults;
+    private static List<ArtistDB> artistDBRealmResults;
     private static int maxSize;
-    @Bind(R.id.toolbar)
+
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.recycleView)
+
+    @BindView(R.id.recycleView)
+
     RecyclerView mRecyclerView;
+
     ProgressDialog progressDialog;
+
     private List<ArtistDB> artistDBList = new LinkedList<>();
+
     private AuthorItemRecyclerViewAdapter adapter;
+
     private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDialog = ProgressDialog
-                .show(this,
-                        getString(R.string.loading_title),
-                        getString(R.string.loading_msg));
+        if(savedInstanceState == null) {
+            progressDialog = ProgressDialog
+                    .show(this,
+                            getString(R.string.loading_title),
+                            getString(R.string.loading_msg));
+        }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -99,16 +108,15 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
-        realm = Realm.getInstance(realmConfig);
-
         ArtistsAPI artistsAPI = retrofit.create(ArtistsAPI.class);
-        if (isNeedUpdateDB(artistsAPI)) {
+        if (isNeedUpdateDB(artistsAPI) && savedInstanceState == null) {
             Call<ArtistDTO[]> call = artistsAPI.loadArtists();
             call.enqueue(this);
         } else {
             loadArtistListFromDB(FIRST_LOAD_SIZE);
-            progressDialog.hide();
+            if(progressDialog != null) {
+                progressDialog.hide();
+            }
         }
 
 
@@ -174,8 +182,7 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
-        realm = null;
+        getRealm().close();
     }
 
     /*
@@ -192,11 +199,11 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
             // Persist your data
             for (int i = 0; i < artists.size(); i++) {
                 ArtistDTO artist = artists.get(i);
-                realm.beginTransaction();
+                getRealm().beginTransaction();
                 ArtistDB artistDB = ArtistDB.of(artist, i);
-                realm.copyToRealmOrUpdate(artistDB);
+                getRealm().copyToRealmOrUpdate(artistDB);
                 artistDBList.add(artistDB);
-                realm.commitTransaction();
+                getRealm().commitTransaction();
             }
             Collections.sort(artistDBList);
         } else {
@@ -208,17 +215,25 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
         * Обновление данных на UI
         * */
         adapter.notifyDataSetChanged();
-        progressDialog.hide();
+        if(progressDialog != null) {
+            progressDialog.hide();
+        }
+    }
+
+    public Realm getRealm() {
+        if (realm == null || realm.isClosed()) {
+            RealmConfiguration realmConfig = new RealmConfiguration.Builder(this).build();
+            realm = Realm.getInstance(realmConfig);
+        }
+        return realm;
     }
 
     private void loadArtistListFromDB(int countItem) {
-        RealmQuery<ArtistDB> artistDBRealmQuery = realm.where(ArtistDB.class);
+        RealmQuery<ArtistDB> artistDBRealmQuery = getRealm().where(ArtistDB.class);
         Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
 
-        if (artistDBRealmResults == null) {
-            artistDBRealmResults = artistDBRealmQuery.findAllSorted("orderId");
-            maxSize = artistDBRealmResults.size();
-        }
+        artistDBRealmResults = artistDBRealmQuery.findAllSorted("orderId");
+        maxSize = artistDBRealmResults.size();
 
         int startIndex = artistDBList.size();
         int endIndex = startIndex + countItem;
@@ -243,7 +258,7 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     * */
     @Override
     public void onFailure(Call<ArtistDTO[]> call, Throwable t) {
-        RealmResults<ArtistDB> artistDBRealmResults = realm.where(ArtistDB.class).findAll();
+        RealmResults<ArtistDB> artistDBRealmResults = getRealm().where(ArtistDB.class).findAll();
         artistDBList.addAll(artistDBRealmResults);
         adapter.notifyDataSetChanged();
         progressDialog.hide();
@@ -436,18 +451,18 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
         @Override
         public void onItemDismiss(int position) {
             ArtistDB artistDB = artistDBList.get(position);
-            ArtistDB resultArtistDB = realm.where(ArtistDB.class).equalTo("id", artistDB.getId()).findFirst();
+            ArtistDB resultArtistDB = getRealm().where(ArtistDB.class).equalTo("id", artistDB.getId()).findFirst();
 
-            Number maxOrderId = realm.where(ArtistDB.class).max("orderId");
-            realm.beginTransaction();
+            Number maxOrderId = getRealm().where(ArtistDB.class).max("orderId");
+            getRealm().beginTransaction();
             if (maxOrderId == null) {
                 resultArtistDB.setOrderId(1);
             } else {
                 resultArtistDB.setOrderId(maxOrderId.intValue() + 1);
             }
 
-            realm.copyToRealmOrUpdate(resultArtistDB);
-            realm.commitTransaction();
+            getRealm().copyToRealmOrUpdate(resultArtistDB);
+            getRealm().commitTransaction();
 
             artistDBList.remove(position);
             artistDBList.add(resultArtistDB);

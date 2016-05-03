@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -24,22 +24,22 @@ public class ArtistInfoFragment extends Fragment {
 
     private Realm realm;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.heart)
+    @BindView(R.id.heart)
     FloatingActionButton heart;
 
-    @Bind(R.id.description)
+    @BindView(R.id.description)
     TextView descriptionTV;
 
-    @Bind(R.id.albums)
+    @BindView(R.id.albums)
     TextView albumsTV;
 
-    @Bind(R.id.tracks)
+    @BindView(R.id.tracks)
     TextView tracksTV;
 
-    @Bind(R.id.header_cover)
+    @BindView(R.id.header_cover)
     ImageView imageView;
 
     private int orderId;
