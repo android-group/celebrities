@@ -7,4 +7,5 @@
     <string name="cover_description">cover</string>
     <string name="loading_title">Please wait</string>
     <string name="loading_msg">Loading list of celebrities</string>
+    <string name="celebrities">Celebrities</string>
 </resources>

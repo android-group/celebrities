@@ -8,4 +8,5 @@
     <string name="tracks_info">альбомов</string>
     <string name="loading_title">Пожалуйста подождите</string>
     <string name="loading_msg">Загружается список знаменитостей</string>
+    <string name="celebrities">Знаменитости</string>
 </resources>

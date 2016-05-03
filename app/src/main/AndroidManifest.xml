@@ -16,17 +16,16 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="ru.android_studio.celebrities.ArtistListActivity"
-            android:label="ArtistListActivity"
+            android:label="@string/celebrities"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="ru.android_studio.celebrities.ArtistInfoActivity"
-            android:label="ArtistInfoActivity"
+            android:label="@string/celebrities"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
