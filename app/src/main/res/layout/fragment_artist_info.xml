@@ -21,7 +21,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -30,10 +29,11 @@
 
             <ImageView
                 android:id="@+id/header_cover"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/full_artist_picture"
                 app:layout_collapseMode="parallax" />
 
         </android.support.design.widget.CollapsingToolbarLayout>

@@ -52,7 +52,6 @@ public class ArtistInfoFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext()).build();
         realm = Realm.getInstance(realmConfig);
 
@@ -77,7 +76,6 @@ public class ArtistInfoFragment extends Fragment {
     }
 
     private void loadByOrderId() {
-
         ArtistDB found = realm.where(ArtistDB.class).equalTo("orderId", orderId).findFirst();
         load(found);
     }
@@ -92,7 +90,7 @@ public class ArtistInfoFragment extends Fragment {
         ImageLoader.loadByUrlToImageView(getContext(), url, imageView);
 
         Log.i(TAG, "Set current artist name: " + currentArtist.getName());
-        toolbar.setTitle(currentArtist.getName());
+        toolbar.setTitle(getString(R.string.celebrities) + ": " + currentArtist.getName());
         Log.i(TAG, "Set current artist name: " + currentArtist.getDescription());
         descriptionTV.setText(currentArtist.getDescription());
 

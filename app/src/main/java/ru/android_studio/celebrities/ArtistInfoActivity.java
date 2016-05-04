@@ -33,6 +33,9 @@ public class ArtistInfoActivity extends AppCompatActivity {
             }
 
             loadFragment();
+        } else {
+            orderId = savedInstanceState.getInt(ArtistListActivity.EXTRAS_ORDER_ID);
+            changeFragment(R.anim.enter_from_bottom, R.anim.exit_to_top);
         }
     }
 
@@ -70,7 +73,6 @@ public class ArtistInfoActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         orderId = savedInstanceState.getInt(ArtistListActivity.EXTRAS_ORDER_ID);
-        loadFragment();
     }
 
     @Override
@@ -132,6 +134,10 @@ public class ArtistInfoActivity extends AppCompatActivity {
         transaction.replace(R.id.fragment, oneFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void reload() {
+        changeFragment(R.anim.enter_from_bottom, R.anim.exit_to_top);
     }
 
     public void onSwipeRight() {
