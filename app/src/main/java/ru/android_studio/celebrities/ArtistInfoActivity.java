@@ -136,10 +136,6 @@ public class ArtistInfoActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void reload() {
-        changeFragment(R.anim.enter_from_bottom, R.anim.exit_to_top);
-    }
-
     public void onSwipeRight() {
         if(orderId == 0) {
             return;
