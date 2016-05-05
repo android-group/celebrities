@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
 /*
 * Активити с информацией об исполнителе
 * */
@@ -18,6 +20,7 @@ public class ArtistInfoActivity extends AppCompatActivity {
     private GestureDetectorCompat detector;
 
     private Integer orderId;
+    private ArrayList<Integer> orders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,8 @@ public class ArtistInfoActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
-                orderId = (Integer) extras.get(ArtistListActivity.EXTRAS_ORDER_ID);
+                orderId = extras.getInt(ArtistListActivity.EXTRAS_ORDER_ID);
+                orders = extras.getIntegerArrayList(ArtistListActivity.EXTRAS_ORDERS);
             }
 
             loadFragment();
@@ -76,7 +80,7 @@ public class ArtistInfoActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
         detector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
@@ -122,7 +126,7 @@ public class ArtistInfoActivity extends AppCompatActivity {
         }
     }
 
-    private void changeFragment(@AnimRes int enter,  @AnimRes int exit) {
+    private void changeFragment(@AnimRes int enter, @AnimRes int exit) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(enter, exit);
 
@@ -137,31 +141,31 @@ public class ArtistInfoActivity extends AppCompatActivity {
     }
 
     public void onSwipeRight() {
-        if(orderId == 0) {
+        if (orderId == 0) {
             return;
         }
-        orderId--;
+        orderId = orders.get(orders.indexOf(orderId) - 1);
 
         changeFragment(R.anim.enter_from_left, R.anim.exit_to_right);
     }
 
     public void onSwipeLeft() {
-        orderId++;
+        orderId = orders.get(orders.indexOf(orderId) + 1);
 
         changeFragment(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
     public void onSwipeTop() {
-        if(orderId == 0) {
+        if (orderId == 0) {
             return;
         }
-        orderId--;
+        orderId = orders.get(orders.indexOf(orderId) - 1);
 
         changeFragment(R.anim.enter_from_bottom, R.anim.exit_to_top);
     }
 
     public void onSwipeBottom() {
-        orderId++;
+        orderId = orders.get(orders.indexOf(orderId) + 1);
 
         changeFragment(R.anim.enter_from_top, R.anim.exit_to_bottom);
     }

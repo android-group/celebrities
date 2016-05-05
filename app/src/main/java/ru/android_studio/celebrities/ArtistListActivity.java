@@ -25,6 +25,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -58,6 +59,7 @@ import ru.android_studio.celebrities.retrofit_api.ArtistsAPI;
 public class ArtistListActivity extends AppCompatActivity implements OnListFragmentInteractionListener, Callback<ArtistDTO[]> {
 
     public static final String EXTRAS_ORDER_ID = "ORDER_ID";
+    public static final String EXTRAS_ORDERS = "ORDERS";
     public static final int FIRST_LOAD_SIZE = 5;
     private static final String TAG = "ItemFragment";
     private static final String LAST_MODIFIED = "Last-Modified";
@@ -164,6 +166,13 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     public void onListFragmentInteraction(ArtistDB artistDB) {
         Intent intent = new Intent(this, ArtistInfoActivity.class);
         intent.putExtra(EXTRAS_ORDER_ID, artistDB.getOrderId());
+
+        ArrayList<Integer> arrayList = new ArrayList<>(artistDBRealmResults.size());
+
+        for (ArtistDB artistDBRealmResult : artistDBRealmResults) {
+            arrayList.add(artistDBRealmResult.getOrderId());
+        }
+        intent.putIntegerArrayListExtra(EXTRAS_ORDERS, arrayList);
         startActivity(intent);
     }
 
@@ -229,11 +238,13 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     }
 
     private void loadArtistListFromDB(int countItem) {
-        RealmQuery<ArtistDB> artistDBRealmQuery = getRealm().where(ArtistDB.class);
-        Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
+        if(artistDBRealmResults == null) {
+            RealmQuery<ArtistDB> artistDBRealmQuery = getRealm().where(ArtistDB.class);
+            Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
 
-        artistDBRealmResults = artistDBRealmQuery.findAllSorted("orderId");
-        maxSize = artistDBRealmResults.size();
+            artistDBRealmResults = artistDBRealmQuery.findAllSorted("orderId");
+            maxSize = artistDBRealmResults.size();
+        }
 
         int startIndex = artistDBList.size();
         int endIndex = startIndex + countItem;
