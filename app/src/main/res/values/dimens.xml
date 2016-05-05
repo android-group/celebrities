@@ -5,6 +5,7 @@
     <dimen name="app_bar_width_w500dp">200dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_biography_margin">10dp</dimen>
 
     <dimen name="artist_list_info_bar">8dp</dimen>
 
@@ -26,4 +27,12 @@
     <dimen name="list_genres">20sp</dimen>
 
     <dimen name="title">24sp</dimen>
+
+
+    <!--activity info-->
+    <!--small text size-->
+    <dimen name="info_small_albums">14sp</dimen>
+    <dimen name="info_small_tracks">14sp</dimen>
+    <dimen name="info_small_biography">18sp</dimen>
+    <dimen name="info_small_description">16sp</dimen>
 </resources>
