@@ -30,9 +30,11 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/list_name"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/genres"
+                android:textSize="@dimen/list_genres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -44,12 +46,15 @@
 
                 <TextView
                     android:id="@+id/tracks"
+                    android:textSize="@dimen/list_tracks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/artist_list_info_bar"
                     android:layout_marginRight="@dimen/artist_list_info_bar" />
 
                 <TextView
                     android:id="@+id/albums"
+                    android:textSize="@dimen/list_albums"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>

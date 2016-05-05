@@ -3,6 +3,7 @@ package ru.android_studio.celebrities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +26,6 @@ public class ArtistInfoFragment extends Fragment {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
-    //@BindView(R.id.heart)
-    //FloatingActionButton heart;
 
     @BindView(R.id.description)
     TextView descriptionTV;
@@ -53,7 +51,7 @@ public class ArtistInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext()).build();
         realm = Realm.getInstance(realmConfig);
-
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         super.onCreate(savedInstanceState);
     }
 

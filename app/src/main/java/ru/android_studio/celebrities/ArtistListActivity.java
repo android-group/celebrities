@@ -238,13 +238,11 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     }
 
     private void loadArtistListFromDB(int countItem) {
-        if(artistDBRealmResults == null) {
-            RealmQuery<ArtistDB> artistDBRealmQuery = getRealm().where(ArtistDB.class);
-            Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
+        RealmQuery<ArtistDB> artistDBRealmQuery = getRealm().where(ArtistDB.class);
+        Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
 
-            artistDBRealmResults = artistDBRealmQuery.findAllSorted("orderId");
-            maxSize = artistDBRealmResults.size();
-        }
+        artistDBRealmResults = artistDBRealmQuery.findAllSorted("orderId");
+        maxSize = artistDBRealmResults.size();
 
         int startIndex = artistDBList.size();
         int endIndex = startIndex + countItem;

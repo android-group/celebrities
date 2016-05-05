@@ -9,4 +9,21 @@
     <dimen name="artist_list_info_bar">8dp</dimen>
 
     <dimen name="content_artist_list_margin">8dp</dimen>
+
+
+    <!--activity info-->
+    <!--text size-->
+    <dimen name="info_albums">16sp</dimen>
+    <dimen name="info_tracks">16sp</dimen>
+    <dimen name="info_biography">24sp</dimen>
+    <dimen name="info_description">20sp</dimen>
+
+    <!--activity list-->
+    <!--text size-->
+    <dimen name="list_albums">16sp</dimen>
+    <dimen name="list_tracks">16sp</dimen>
+    <dimen name="list_name">24sp</dimen>
+    <dimen name="list_genres">20sp</dimen>
+
+    <dimen name="title">24sp</dimen>
 </resources>
