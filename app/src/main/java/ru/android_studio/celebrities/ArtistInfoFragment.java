@@ -51,7 +51,7 @@ public class ArtistInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         RealmConfiguration realmConfig = new RealmConfiguration.Builder(getContext()).build();
         realm = Realm.getInstance(realmConfig);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -60,6 +60,11 @@ public class ArtistInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_artist_info, container, false);
         ButterKnife.bind(this, view);
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         if(savedInstanceState != null) {
             orderId = savedInstanceState.getInt(ArtistListActivity.EXTRAS_ORDER_ID);

@@ -70,7 +70,6 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     Toolbar toolbar;
 
     @BindView(R.id.recycleView)
-
     RecyclerView mRecyclerView;
 
     ProgressDialog progressDialog;
