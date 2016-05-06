@@ -31,19 +31,19 @@
 
             <TextView
                 android:id="@+id/name"
-                android:textSize="@dimen/list_name"
+                android:textSize="@dimen/list_small_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/genres"
-                android:textSize="@dimen/list_genres"
+                android:textSize="@dimen/list_small_genres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/tracks"
-                android:textSize="@dimen/list_tracks"
+                android:textSize="@dimen/list_small_tracks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/artist_list_info_bar"
@@ -51,7 +51,7 @@
 
             <TextView
                 android:id="@+id/albums"
-                android:textSize="@dimen/list_albums"
+                android:textSize="@dimen/list_small_albums"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
