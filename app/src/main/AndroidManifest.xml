@@ -26,7 +26,12 @@
         <activity
             android:name="ru.android_studio.celebrities.ArtistInfoActivity"
             android:label="@string/celebrities"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName="ru.android_studio.celebrities.ArtistListActivity"
+        android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.android_studio.celebrities.ArtistListActivity" />
+        </activity>
     </application>
 
 </manifest>
