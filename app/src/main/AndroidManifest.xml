@@ -25,7 +25,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="ru.android_studio.celebrities.ArtistInfoActivity"
-            android:label="@string/celebrities"
             android:parentActivityName="ru.android_studio.celebrities.ArtistListActivity"
         android:theme="@style/AppTheme.NoActionBar">
             <meta-data

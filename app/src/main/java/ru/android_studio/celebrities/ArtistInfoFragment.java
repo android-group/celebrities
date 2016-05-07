@@ -63,6 +63,7 @@ public class ArtistInfoFragment extends Fragment {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -92,7 +93,9 @@ public class ArtistInfoFragment extends Fragment {
         ImageLoader.loadByUrlToImageView(getContext(), url, imageView);
 
         Log.i(TAG, "Set current artist name: " + currentArtist.getName());
-        toolbar.setTitle(getString(R.string.celebrities) + ": " + currentArtist.getName());
+        String title = currentArtist.getName();
+        toolbar.setTitle(title);
+        getActivity().setTitle(title);
         Log.i(TAG, "Set current artist name: " + currentArtist.getDescription());
         descriptionTV.setText(currentArtist.getDescription());
 
