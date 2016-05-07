@@ -33,7 +33,7 @@
             android:fitsSystemWindows="true"
             android:scaleType="centerCrop"
             app:layout_collapseMode="parallax"
-            android:contentDescription="@string/full_artist_picture"
+            android:contentDescription="@string/big_cover"
             android:layout_width="0dp" />
 
         <include layout="@layout/content_artist_info"

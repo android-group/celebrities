@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:contentDescription="@string/full_artist_picture" />
+            android:contentDescription="@string/big_cover" />
 
         <include
             layout="@layout/content_artist_info"

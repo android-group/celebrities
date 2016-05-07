@@ -4,9 +4,10 @@
     <string name="albums_info">песен</string>
     <string name="action_settings">Настройки</string>
     <string name="biography">Биография</string>
-    <string name="cover_description">обложка</string>
+    <string name="cover_description">Фотография</string>
     <string name="tracks_info">альбомов</string>
     <string name="loading_title">Пожалуйста подождите</string>
     <string name="loading_msg">Загружается список знаменитостей</string>
     <string name="celebrities">Знаменитости</string>
+    <string name="big_cover">Фотография в большом разрешении</string>
 </resources>

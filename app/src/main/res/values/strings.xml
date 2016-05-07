@@ -8,5 +8,5 @@
     <string name="loading_title">Please wait</string>
     <string name="loading_msg">Loading list of celebrities</string>
     <string name="celebrities">Celebrities</string>
-    <string name="full_artist_picture">full artist picture</string>
+    <string name="big_cover">big cover</string>
 </resources>
