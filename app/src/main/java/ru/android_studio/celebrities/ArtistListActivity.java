@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -65,6 +64,9 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     private static final String LAST_MODIFIED = "Last-Modified";
     private static List<ArtistDB> artistDBRealmResults;
     private static int maxSize;
+    private static int restoreListSize;
+    private int loadedSize;
+    private static String RESTORE_LIST_SIZE = "RESTORE_LIST_SIZE";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -87,6 +89,8 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
         if(savedInstanceState == null) {
             progressDialog = ProgressDialog
                     .show(this, getString(R.string.loading_title), getString(R.string.loading_msg));
+        } else {
+            restoreListSize = savedInstanceState.getInt(ArtistListActivity.RESTORE_LIST_SIZE, restoreListSize);
         }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -96,7 +100,10 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
+        ActionBar supportActionBar = getSupportActionBar();
+        supportActionBar.setDisplayUseLogoEnabled(true);
+        supportActionBar.setIcon(R.mipmap.ic_launcher);
+        supportActionBar.setDisplayShowTitleEnabled(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
@@ -112,7 +119,7 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
             Call<ArtistDTO[]> call = artistsAPI.loadArtists();
             call.enqueue(this);
         } else {
-            loadArtistListFromDB(FIRST_LOAD_SIZE);
+            firstLoadArtistListFromDB();
             if(progressDialog != null) {
                 progressDialog.hide();
             }
@@ -140,7 +147,6 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
                         artistDBList.remove(artistDBList.size() - 1);
                         adapter.notifyItemRemoved(artistDBList.size());
 
-                        //Load data
                         loadArtistListFromDB(20);
 
                         adapter.notifyDataSetChanged();
@@ -182,18 +188,6 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_artist_info, menu);
-        return true;
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         getRealm().close();
@@ -221,7 +215,7 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
             }
             Collections.sort(artistDBList);
         } else {
-            loadArtistListFromDB(FIRST_LOAD_SIZE);
+            firstLoadArtistListFromDB();
         }
 
 
@@ -231,6 +225,14 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
         adapter.notifyDataSetChanged();
         if(progressDialog != null) {
             progressDialog.hide();
+        }
+    }
+
+    private void firstLoadArtistListFromDB() {
+        if(restoreListSize > loadedSize) {
+            loadArtistListFromDB(restoreListSize);
+        } else {
+            loadArtistListFromDB(FIRST_LOAD_SIZE);
         }
     }
 
@@ -250,12 +252,13 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
         maxSize = artistDBRealmResults.size();
 
         int startIndex = artistDBList.size();
-        int endIndex = startIndex + countItem;
-        if (maxSize >= endIndex) {
-            artistDBList.addAll(artistDBRealmResults.subList(startIndex, endIndex));
+        loadedSize = startIndex + countItem;
+        if (maxSize >= loadedSize) {
+            artistDBList.addAll(artistDBRealmResults.subList(startIndex, loadedSize));
         } else {
             artistDBList.addAll(artistDBRealmResults.subList(startIndex, maxSize));
         }
+        restoreListSize = loadedSize;
     }
 
     private void writeLastModifiedDB(Response<ArtistDTO[]> response) {
@@ -347,6 +350,18 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
             albums = (TextView) itemView.findViewById(R.id.albums);
             cover = (ImageView) itemView.findViewById(R.id.cover);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(ArtistListActivity.RESTORE_LIST_SIZE, restoreListSize);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restoreListSize = savedInstanceState.getInt(ArtistListActivity.RESTORE_LIST_SIZE, restoreListSize);
     }
 
     /*

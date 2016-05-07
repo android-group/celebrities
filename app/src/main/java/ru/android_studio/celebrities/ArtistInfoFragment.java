@@ -3,6 +3,7 @@ package ru.android_studio.celebrities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,8 +20,6 @@ import io.realm.RealmConfiguration;
 import ru.android_studio.celebrities.model.db.ArtistDB;
 
 public class ArtistInfoFragment extends Fragment {
-
-    private ArtistDB currentArtist;
 
     private Realm realm;
 
@@ -63,10 +62,13 @@ public class ArtistInfoFragment extends Fragment {
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        ActionBar supportActionBar = activity.getSupportActionBar();
+        supportActionBar.setDisplayShowHomeEnabled(true);
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+        supportActionBar.setDisplayShowTitleEnabled(true);
+        supportActionBar.setDisplayUseLogoEnabled(true);
+        supportActionBar.setIcon(R.mipmap.ic_launcher);
         if(savedInstanceState != null) {
             orderId = savedInstanceState.getInt(ArtistListActivity.EXTRAS_ORDER_ID);
         } else {
@@ -87,7 +89,7 @@ public class ArtistInfoFragment extends Fragment {
         if (artistDB == null) {
             return;
         }
-        currentArtist = artistDB;
+        ArtistDB currentArtist = artistDB;
 
         String url = currentArtist.getCover().getBig();
         ImageLoader.loadByUrlToImageView(getContext(), url, imageView);

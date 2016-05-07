@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -53,18 +51,6 @@ public class ArtistInfoActivity extends AppCompatActivity {
         transaction.setCustomAnimations(R.anim.enter_from_top, R.anim.exit_to_bottom);
         transaction.add(R.id.fragment, oneFragment, "ArtistInfoFragment");
         transaction.commit();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_artist_info, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     @Override
