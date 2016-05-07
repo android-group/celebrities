@@ -11,6 +11,6 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:layout_height="?android:attr/actionBarSize"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
         android:background="@color/colorPrimary"/>
+    <!--app:titleTextAppearance="@style/Toolbar.TitleText"-->
 </LinearLayout>

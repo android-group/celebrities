@@ -20,16 +20,17 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/artist_list_info_bar"
             android:contentDescription="@string/cover_description" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/artist_list_info_bar"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/name"
                 android:textSize="@dimen/list_small_name"
@@ -41,11 +42,11 @@
                 android:textSize="@dimen/list_small_genres"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/artist_list_info_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/artist_list_info_bar"
                 android:orientation="horizontal">
 
                 <TextView

@@ -17,29 +17,29 @@
     <!--text size-->
     <dimen name="info_albums">16sp</dimen>
     <dimen name="info_tracks">16sp</dimen>
-    <dimen name="info_biography">24sp</dimen>
-    <dimen name="info_description">20sp</dimen>
+    <dimen name="info_biography">16sp</dimen>
+    <dimen name="info_description">16sp</dimen>
 
     <!--activity info-->
     <!--small text size-->
     <dimen name="info_small_albums">14sp</dimen>
     <dimen name="info_small_tracks">14sp</dimen>
-    <dimen name="info_small_biography">18sp</dimen>
-    <dimen name="info_small_description">16sp</dimen>
+    <dimen name="info_small_biography">14sp</dimen>
+    <dimen name="info_small_description">14sp</dimen>
 
     <!--activity list-->
     <!--text size-->
     <dimen name="list_albums">16sp</dimen>
     <dimen name="list_tracks">16sp</dimen>
-    <dimen name="list_name">24sp</dimen>
-    <dimen name="list_genres">20sp</dimen>
+    <dimen name="list_name">16sp</dimen>
+    <dimen name="list_genres">16sp</dimen>
 
     <!--activity info-->
     <!--small text size-->
     <dimen name="list_small_albums">14sp</dimen>
     <dimen name="list_small_tracks">14sp</dimen>
-    <dimen name="list_small_name">18sp</dimen>
-    <dimen name="list_small_genres">16sp</dimen>
+    <dimen name="list_small_name">14sp</dimen>
+    <dimen name="list_small_genres">14sp</dimen>
 
     <dimen name="title">24sp</dimen>
 

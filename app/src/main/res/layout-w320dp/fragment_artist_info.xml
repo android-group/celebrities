@@ -16,11 +16,11 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/header_cover"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -28,8 +28,7 @@
 
         <include
             layout="@layout/content_artist_info"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_margin="@dimen/text_small_margin"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1" />
