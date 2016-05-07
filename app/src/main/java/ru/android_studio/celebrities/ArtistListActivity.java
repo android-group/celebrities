@@ -167,8 +167,12 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
         if(artistDBRealmResults == null) {
             RealmQuery<ArtistDB> artistDBRealmQuery = getRealm().where(ArtistDB.class);
             Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
+
+            artistDBRealmResults = artistDBRealmQuery.findAllSorted("orderId");
         }
-        ArrayList<Integer> arrayList = new ArrayList<>(artistDBRealmResults.size());
+
+        maxSize = artistDBRealmResults.size();
+        ArrayList<Integer> arrayList = new ArrayList<>(maxSize);
 
         for (ArtistDB artistDBRealmResult : artistDBRealmResults) {
             arrayList.add(artistDBRealmResult.getOrderId());
