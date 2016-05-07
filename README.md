@@ -1,4 +1,5 @@
 # Знаменитости
+![photo-tablet-landscape-info](https://github.com/android-group/celebrities/blob/master/app/src/main/res/drawable/logo_1024_500.png)
 
 # Планшет
 ![photo-tablet-landscape-info](https://github.com/android-group/celebrities/blob/master/photo/tablet/landscape/info.png)
