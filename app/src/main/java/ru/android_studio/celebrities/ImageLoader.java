@@ -20,6 +20,8 @@ public class ImageLoader {
 
         Picasso.with(context)
                 .load(url)
+                .error(R.drawable.logo)
+                .placeholder(R.drawable.logo)
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .into(imageView, new Callback() {
                     @Override
@@ -32,6 +34,8 @@ public class ImageLoader {
                         //Try again online if cache failed
                         Picasso.with(context)
                                 .load(url)
+                                .error(R.drawable.logo)
+                                .placeholder(R.drawable.logo)
                                 .into(imageView, new Callback() {
                                     @Override
                                     public void onSuccess() {

@@ -22,6 +22,7 @@
         <ImageView
             android:id="@+id/header_cover"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:fitsSystemWindows="true"
             android:scaleType="centerCrop"
