@@ -86,9 +86,7 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
 
         if(savedInstanceState == null) {
             progressDialog = ProgressDialog
-                    .show(this,
-                            getString(R.string.loading_title),
-                            getString(R.string.loading_msg));
+                    .show(this, getString(R.string.loading_title), getString(R.string.loading_msg));
         }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -166,6 +164,10 @@ public class ArtistListActivity extends AppCompatActivity implements OnListFragm
         Intent intent = new Intent(this, ArtistInfoActivity.class);
         intent.putExtra(EXTRAS_ORDER_ID, artistDB.getOrderId());
 
+        if(artistDBRealmResults == null) {
+            RealmQuery<ArtistDB> artistDBRealmQuery = getRealm().where(ArtistDB.class);
+            Log.d(TAG, "Count of artists before persist: " + artistDBRealmQuery.count());
+        }
         ArrayList<Integer> arrayList = new ArrayList<>(artistDBRealmResults.size());
 
         for (ArtistDB artistDBRealmResult : artistDBRealmResults) {
